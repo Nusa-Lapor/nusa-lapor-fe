@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NusaLapor
 
-## Getting Started
+**Solusi Pelaporan Gapake Ribet!**
 
-First, run the development server:
+## Instalasi dan Cara Menjalankan 📌
 
+Dalam development NusaLapor, kami memakai _techstack_ Django sebagai _backend_, Next.js sebagai _frontend_, ShadcnUI untuk UI/UX dan Supabase / PostgreSQL, Drizzle ORM (_unconfirmed_) sebagai basis data yang digunakan.
+
+### 1. Instalasi Project🙌
+
+Untuk memulai dari project *frontend* ini, berikut langkah-langkah yang bisa dikerjakan:
+
+1. Melakukan cloning project ke local
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Nusa-Lapor/nusa-lapor-fe.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Masuk ke `development` environments
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**`Windows`** atau **`MacOS`**
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Dengan menyelesaikan langkah-langkah berikut, project *frontend* Next.js ini siap dikembangkan (develop). Untuk melihat progres *development* silakan membuka [http://localhost:3000/](http://localhost:3000/) atau [http://192.168.56.1:8000/](http://192.168.56.1:8000/).
 
-## Learn More
+### 2. Instalasi Packages📦
 
-To learn more about Next.js, take a look at the following resources:
+Untuk melengkapi project *frontend* ini, ada beberapa packages yang harus diinstal:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Instalasi dependencies
+- Dependencies sudah dirangkum dalam project ini sehingga Anda hanya perlu menjalankan
+```bash
+npm i
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Catatan tambahan📝
 
-## Deploy on Vercel
+Anda bisa _spend_ waktu untuk mempelajari dokumentasi _techstack_ yang digunakan dengan _hyperlink_ di bawah ini:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [PostgreSQL](https://postgresql.org)
+- [Next.js](https://nextjs.org)
+- [Django](https://www.djangoproject.com/)
+- [ShadcnUI](https://ui.shadcn.com/)
+- **TBD (unconfirmed):** [Supabase](https://supabase.com)
+- **TBD (unconfirmed):** [Drizzle ORM](https://orm.drizzle.team)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Deployment🔗🏁
+**TBA**
