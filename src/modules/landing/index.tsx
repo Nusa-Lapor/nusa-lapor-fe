@@ -3,14 +3,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 // import { Burger } from "@/components/icons/Burger";
-import { Twitter } from "@/components/icons/Twitter";
-import { Instagram } from "@/components/icons/Instagram";
-import { LinkedIn } from "@/components/icons/LinkedIn";
-import { Youtube } from "@/components/icons/Youtube";
 import StatisticsChart from "@/components/elements/StatisticsChart/StatisticsChart";
 import TestimonialCard from "@/components/elements/TestimonialCard/TestimonialCard";
 import ArticleCard from '@/components/elements/ArticleCard/ArticleCard';
 import { articleService } from '@/services/article';
+import { Footer } from "@/components/elements/Layout/Footer";
 
 
 async function getArticles() {
@@ -132,53 +129,9 @@ export const Landing = async () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white py-12">
+      <footer className="bg-slate-200 py-8 mt-auto w-full">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-4 gap-8">
-            <div>
-              <h5 className="font-semibold mb-4">Use cases</h5>
-              <ul className="space-y-2">
-                <li>UI design</li>
-                <li>UX design</li>
-                <li>Wireframing</li>
-                <li>Diagramming</li>
-                <li>Brainstorming</li>
-                <li>Online whiteboard</li>
-                <li>Team collaboration</li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-4">Explore</h5>
-              <ul className="space-y-2">
-                <li>Design</li>
-                <li>Prototyping</li>
-                <li>Development features</li>
-                <li>Design systems</li>
-                <li>Collaboration features</li>
-                <li>Design process</li>
-                <li>FigJam</li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-4">Resources</h5>
-              <ul className="space-y-2">
-                <li>Blog</li>
-                <li>Best practices</li>
-                <li>Colors</li>
-                <li>Color wheel</li>
-                <li>Support</li>
-                <li>Developers</li>
-              </ul>
-            </div>
-            <div>
-              <div className="flex space-x-4 mb-4">
-                <Twitter className="w-6 h-6" size="24" />
-                <Instagram className="w-6 h-6" size="24" />
-                <LinkedIn className="w-6 h-6" size="24" />
-                <Youtube className="w-6 h-6" size="24" />
-              </div>
-            </div>
-          </div>
+          <Footer />
         </div>
       </footer>
     </main>
