@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button';
 
-export default function Navbar() {
+export const NavBar = () => {
   const pathname = usePathname()
 
   const isActive = (path: string) => {
@@ -20,7 +20,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/public/logo.png"
+                src="/logo.png"
                 alt="Nusa Lapor Logo"
                 width={40}
                 height={40}
@@ -64,4 +64,4 @@ export default function Navbar() {
       </div>
     </nav>
   )
-} 
+}

@@ -12,6 +12,7 @@ import TestimonialCard from "@/components/elements/TestimonialCard/TestimonialCa
 import ArticleCard from '@/components/elements/ArticleCard/ArticleCard';
 import { articleService } from '@/services/article';
 
+
 async function getArticles() {
   try {
     return await articleService.getArticles()
@@ -21,7 +22,7 @@ async function getArticles() {
   }
 }
 
-export const Landing = async () =>{
+export const Landing = async () => {
   const articles = await getArticles()
 
   return (

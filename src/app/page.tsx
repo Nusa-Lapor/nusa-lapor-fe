@@ -1,3 +1,3 @@
-import { Landing } from '@/modules/landing/page'
+import { Landing } from "@/modules/landing";
 
 export default Landing;

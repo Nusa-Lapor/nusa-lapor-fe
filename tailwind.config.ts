@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
     darkMode: ["class"],
@@ -49,7 +50,10 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+				"button-primary": "#FF2C4E", // Red color
+        "button-secondary": "#9FC93C", // Green color
+        "text-light-3": "#FFFFFF", // White text
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -58,5 +62,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;
