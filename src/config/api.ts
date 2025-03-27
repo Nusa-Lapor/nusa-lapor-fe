@@ -5,6 +5,10 @@ export const API_ENDPOINTS = {
   LOGIN: '/auth/login/',
   REGISTER: '/auth/register/',
   LOGOUT: '/auth/logout/',
+  PROTECTED: '/auth/protected/',
+  PROTECTED_PETUGAS: '/auth/protected/petugas/',
+  PROTECTED_ADMIN: '/auth/protected/admin/',
+  REFRESH: '/auth/refresh/',
   
   // Articles
   ARTICLES: '/article/artikel/',

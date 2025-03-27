@@ -8,19 +8,49 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardBody, CardFooter, CardContent } from "@/components/ui/card";
+import authService from "@/services/auth";
 
 const RegisterPage: React.FC = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [nomorTelepon, setNomorTelepon] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleRegister = (e: React.FormEvent) => {
+  
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your registration logic here
-    console.log({ username, fullName, email, password, confirmPassword });
+    
+    // Validate password match
+    if (password !== confirmPassword) {
+      setError('Password tidak cocok');
+      return;
+    }
+    
+    setIsLoading(true);
+    setError(null);
+    
+    // Use the auth service to register
+    const result = await authService.register({
+      username,
+      email,
+      name,
+      password,
+      nomorTelepon: nomorTelepon || undefined,
+    });
+    
+    if (result.success) {
+      // Redirect to login with a success message
+      router.push('/auth/login?registered=success');
+    } else {
+      setError(result.error || 'Registration failed');
+    }
+    
+    setIsLoading(false);
   };
 
   React.useEffect(() => {
@@ -92,8 +122,8 @@ const RegisterPage: React.FC = () => {
                 <input
                   id="fullName"
                   type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full h-24 sm:h-20 px-4 py-2 border border-slate-200 rounded-[5px]"
                   required
                 />
@@ -138,7 +168,7 @@ const RegisterPage: React.FC = () => {
               className="w-full h-24 sm:h-20"
               disabled={false}
             >
-              Register
+              {isLoading ? 'Loading...' : 'Register'}
             </Button>
           </form>
         </CardContent>
