@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en" className={`${roboto.variable}`}>
       <body className={inter.className}>
         {!shouldExcludeNavbarFooter && <NavBar />}
-        <main className={!shouldExcludeNavbarFooter ? "pt-16" : ""}>
+        <main className={!shouldExcludeNavbarFooter ? "min-h-screen w-full pt-16" : "min-h-screen w-full"}>
           {children}
         </main>
         {!shouldExcludeNavbarFooter && <Footer />}

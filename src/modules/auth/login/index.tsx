@@ -1,119 +1,146 @@
-import React, { use, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRouter } from 'next/navigation';
+'use client';
 
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { PasswordField } from '../register/components/PasswordField';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement login logic here
-    console.log('Login attempt with:', email, password);
-    // After successful login, navigate to dashboard or home
-    // navigate('/dashboard');
+    setIsLoading(true);
+
+    try {
+      // Replace with your actual API call
+      const response = await fetch('http://localhost:8000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store token
+        localStorage.setItem('token', data.token);
+        // Redirect
+        router.push('/dashboard');
+      } else {
+        // Show error
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const router = useRouter();
   useEffect(() => {
     router.prefetch('/auth/register');
-    router.prefetch('/auth/reset-password');
+    router.prefetch('/');
+
+    document.body.style.backgroundColor = '#e5e7eb'; 
+    document.body.style.minHeight = '100vh';
+    document.body.style.margin = '0';
+    
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.body.style.minHeight = '';
+      document.body.style.margin = '';
+    };
   }, [router]);
 
   return (
-    <div className="min-h-screen w-full bg-slate-200">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center items-center min-h-screen">
-          {/* Card container */}
-          <div className="bg-white rounded-[10px] w-full 
-            sm:w-[600px] sm:h-[750px] 
-            md:p-8
-            max-w-[800px] h-auto py-10 px-6">
-            
-            {/* Logo */}
-            <div className="flex justify-center mb-4">
-              <img 
-                src="https://placehold.co/189x72" 
-                alt="Logo" 
-                className="h-16 sm:h-16 w-auto" 
+    <div className="min-h-screen w-full flex items-center justify-center bg-slate-200 py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full h-auto shadow-lg overflow-hidden">
+        <CardHeader className="pt-10 pb-0">
+          <div className="flex justify-center mb-8">
+            <Image 
+              src="/logo.png" 
+              alt="Logo" 
+              width={160}
+              height={72}
+              className="h-20 w-auto sm:h-16" 
+              priority
+            />
+          </div>
+          <h1 className="text-4xl font-bold text-center text-red-700 mb-6">
+            Login
+          </h1>
+        </CardHeader>
+        
+        <CardContent className="pt-6 px-6 md:px-8">
+          <form onSubmit={handleLogin} className="space-y-8 w-full max-w-[684px] sm:max-w-[513px] mx-auto">
+            <div>
+              <label htmlFor="email" className="block text-red-700 text-2xl font-normal mb-4">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full h-24 sm:h-20 px-4 py-2 border border-slate-200 rounded-[5px]"
+                placeholder="Masukkan email anda"
               />
             </div>
+
+            {/* Gap */}
+            <div className="h-6" />
             
-            {/* Login Title */}
-            <h1 className="text-red-700 font-bold text-4xl text-center mt-4 mb-8">
-              Login
-            </h1>
-            
-            <form onSubmit={handleLogin}>
-              {/* Email Field */}
-              <div className="mb-6">
-                <label 
-                  htmlFor="email" 
-                  className="block text-red-700 text-2xl mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-16 sm:h-20 px-4 rounded-[5px] border border-slate-200 focus:outline-none focus:border-red-700"
-                  required
-                />
-              </div>
-              
-              {/* Password Field */}
-              <div className="mb-8">
-                <label 
-                  htmlFor="password" 
-                  className="block text-red-700 text-2xl mb-2"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-16 sm:h-20 px-4 rounded-[5px] border border-slate-200 focus:outline-none focus:border-red-700"
-                  required
-                />
-              </div>
-              
-              {/* Login Button */}
-              <button 
-                type="submit"
-                className="w-full h-16 sm:h-20 bg-red-700 rounded-[5px] text-white text-xl sm:text-3xl font-normal hover:bg-red-800 transition duration-300"
-              >
-                Login
-              </button>
-            </form>
-            
-            {/* Register Link */}
-            <div className="text-center mt-6">
-              <Link 
-                to="/register" 
-                className="text-red-700 text-xl sm:text-3xl hover:text-red-900"
-              >
-                Belum punya akun? Daftar
-              </Link>
+            <div>
+              <PasswordField
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                label="Password"
+              />
             </div>
+
+            {/* Gap */}
+            <div className="h-10" />
             
-            {/* Reset Password Link */}
-            <div className="text-center mt-4">
-              <Link 
-                to="/reset-password" 
-                className="text-red-700 text-xl sm:text-3xl hover:text-red-900"
-              >
-                Lupa password? Reset
-              </Link>
-            </div>
+            {/* Login Button - matches Figma styles */}
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full h-24 sm:h-20"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Loading...' : 'Login'}
+            </Button>
+          </form>
+        </CardContent>
+        
+        <CardFooter className="flex-col pb-10 pt-2">
+          {/* Register Link */}
+          <div className="mb-4 text-center">
+            <Link href="/auth/register" className="text-red-700 text-3xl font-normal">
+              Belum punya akun? Daftar
+            </Link>
           </div>
-        </div>
-      </div>
+  
+          {/* Forgot Password Link */}
+          <div className="text-center">
+            <Link href="/" className="text-red-700 text-3xl font-normal">
+              Masuk tanpa akun
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
