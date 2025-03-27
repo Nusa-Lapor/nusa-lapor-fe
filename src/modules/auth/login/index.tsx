@@ -7,43 +7,37 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { PasswordField } from '../register/components/PasswordField';
+import { useAuthContext } from '@/providers/AuthProvider';
+import { Message } from '@/components/elements/FormMessage/interface';
+import { FormMessage } from '@/components/elements/FormMessage/FormMessage';
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  signInAction?: (formData: { email: string; password: string }) => void;
+  searchParams?: Message;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ signInAction, searchParams }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  
   const router = useRouter();
-
+  const { login, isLoading } = useAuthContext();
+  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
+    setError('');
+    
     try {
-      // Replace with your actual API call
-      const response = await fetch('http://localhost:8000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store token
-        localStorage.setItem('token', data.token);
-        // Redirect
-        router.push('/dashboard');
+      const result = await login({ email, password });
+      
+      if (result.success) {
+        router.push('/');
       } else {
-        // Show error
-        alert(data.message || 'Login failed');
+        setError(result.error || 'Login failed');
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      setError('An unexpected error occurred');
     }
   };
 
@@ -122,6 +116,7 @@ const LoginPage: React.FC = () => {
             >
               {isLoading ? 'Loading...' : 'Login'}
             </Button>
+            <FormMessage message={searchParams ?? { message: error, type: 'error' } as Message} />
           </form>
         </CardContent>
         

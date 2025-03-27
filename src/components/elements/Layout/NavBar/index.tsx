@@ -1,24 +1,54 @@
-'use client'
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "@/providers/AuthProvider";
+import { useAuth, authState } from "@/services/auth";
 
 export const NavBar = () => {
+  // Get current path and router for navigation
   const pathname = usePathname();
   const router = useRouter();
-  
-  useEffect(() => {
-    router.prefetch('/auth/login');
-    router.prefetch('/auth/register');
-    router.prefetch('/help-center');
-    router.prefetch('/hotline');
-  }, [router]);
 
+  // Get auth state and actions from Auth context
+  const { isLoading, logout, checkAuth } = useAuthContext();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  let isAuthenticated = authState.isAuthenticated;
+
+  // Check auth status on component mount and route changes
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth, pathname]);
+
+  // Function to handle logout button click
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isLoggingOut) return; // Prevent multiple clicks
+
+    setIsLoggingOut(true); // Show loading state
+
+    try {
+      // Call logout and wait for it to complete
+      await logout();
+      
+      // Redirect to login page
+      router.push("/auth/login");
+    } catch (error: unknown) {
+      // Redirect to login page even on error
+      router.push("/auth/login");
+    } finally {
+      setIsLoggingOut(false); // Reset loading state
+    }
+  };
+
+  // A helper function to determine active links
   const isActive = (path: string) => {
-    return pathname === path ? 'text-primary font-semibold' : 'text-gray-600 hover:text-primary'
+    return pathname === path
+      ? "text-primary font-semibold"
+      : "text-gray-600 hover:text-primary";
   };
 
   return (
@@ -35,47 +65,85 @@ export const NavBar = () => {
                 height={40}
                 className="w-auto h-8"
               />
-              <span className="text-xl font-semibold text-primary">Nusa Lapor</span>
+              <span className="text-xl font-semibold text-primary">
+                Nusa Lapor
+              </span>
             </Link>
           </div>
 
           {/* Navigation Menu - Desktop */}
           <div className="hidden md:flex items-center space-x-8">
             {[
-              { path: '/', label: 'Dashboard' },
-              { path: '/help-center', label: 'Help Center' },
-              { path: '/hotline', label: 'Hotline Darurat' }
+              { path: "/", label: "Dashboard" },
+              { path: "/help-center", label: "Help Center" },
+              { path: "/hotline", label: "Hotline Darurat" },
             ].map((item) => (
-              <Link 
+              <Link
                 key={item.path}
-                href={item.path} 
-                className={`${isActive(item.path)} transition-colors duration-200`}
+                href={item.path}
+                className={`${isActive(
+                  item.path
+                )} transition-colors duration-200`}
               >
                 {item.label}
               </Link>
             ))}
           </div>
 
-          {/* Login Button */}
+          {/* Login/Logout Button */}
           <div className="flex items-center space-x-4">
-            <Button variant="primary" asChild>
-              <Link href="/auth/login">
+            {isLoading ? (
+              <Button className="hidden md:block" disabled>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                Loading...
+              </Button>
+            ) : isAuthenticated ? (
+              <Button
+                onClick={handleLogout}
+                className="hidden md:block"
+                disabled={isLoggingOut}
+              >
+                {isLoggingOut ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Logging out...
+                  </>
+                ) : (
+                  "Logout"
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push("/auth/login")}
+                className="hidden md:block"
+              >
                 Login
-              </Link>
-            </Button>
+              </Button>
+            )}
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="md:hidden rounded-md p-2 text-gray-500 hover:bg-gray-100 focus:outline-none"
               onClick={() => {
-                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenu = document.getElementById("mobile-menu");
                 if (mobileMenu) {
-                  mobileMenu.classList.toggle('hidden');
+                  mobileMenu.classList.toggle("hidden");
                 }
               }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>
@@ -84,20 +152,40 @@ export const NavBar = () => {
         {/* Mobile Menu */}
         <div id="mobile-menu" className="hidden md:hidden py-2 space-y-1">
           {[
-            { path: '/', label: 'Dashboard' },
-            { path: '/help-center', label: 'Help Center' },
-            { path: '/hotline', label: 'Hotline Darurat' }
+            { path: "/", label: "Dashboard" },
+            { path: "/help-center", label: "Help Center" },
+            { path: "/hotline", label: "Hotline Darurat" },
           ].map((item) => (
-            <Link 
+            <Link
               key={item.path}
               href={item.path}
-              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(item.path)}`}
+              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(
+                item.path
+              )}`}
             >
               {item.label}
             </Link>
           ))}
+          
+          {/* Add logout/login for mobile */}
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600"
+              disabled={isLoggingOut}
+            >
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </button>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="block px-3 py-2 rounded-md text-base font-medium text-primary"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
